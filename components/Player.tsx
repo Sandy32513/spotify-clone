@@ -37,7 +37,9 @@ export default function Player() {
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!progressRef.current || !duration) return;
     const rect = progressRef.current.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
+    let percent = (e.clientX - rect.left) / rect.width;
+    // Clamp percent to [0, 1]
+    percent = Math.max(0, Math.min(1, percent));
     const newTime = percent * duration;
     seekTo(newTime);
   };

@@ -574,9 +574,18 @@ join public.permissions p on
   or (r.key = 'listener' and p.key in ('catalog.read'))
 on conflict do nothing;
 
-insert into public.admin_accounts (username, password_hash, is_active)
-values ('admin', null, true)
-on conflict (username) do nothing;
+-- Important: Do NOT create default admin accounts in production.
+-- Admin accounts must be created via secure means with strong passwords.
+-- The application uses environment variables for admin authentication:
+-- ADMIN_USERNAME and ADMIN_PASSWORD (or MUSIC_PIPELINE_API_TOKEN for pipeline)
+-- See .env.local.example for configuration.
+
+-- Note: The admin_accounts table supports password_hash for future hash-based auth.
+-- Currently, the application verifies admin credentials via environment variables.
+-- This migration does NOT create any admin user records by default.
+
+-- To create an admin account in production, use secure setup scripts or
+-- manual database inserts with properly hashed passwords.
 
 insert into public.system_settings (key, value, description, is_public) values
   ('app.name', '"Spotify Clone"'::jsonb, 'Application display name', true),

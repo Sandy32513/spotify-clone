@@ -87,6 +87,14 @@ async function extractZip(archivePath: string, dest: string, config: PipelineCon
           return;
         }
 
+        // Check for symlink attacks (zip entries with external links)
+        if (entry.externalAttr !== undefined && (entry.externalAttr & 0xA000) === 0xA000) {
+          // 0xA000 = symlink in ZIP external attributes
+          zipFile.close();
+          reject(new Error(`Symlink entries are not allowed: ${entry.fileName}`));
+          return;
+        }
+
         if (
           entry.compressedSize > 0 &&
           entry.uncompressedSize / entry.compressedSize > MAX_COMPRESSION_RATIO
@@ -105,6 +113,20 @@ async function extractZip(archivePath: string, dest: string, config: PipelineCon
         await fsp.mkdir(path.dirname(target), { recursive: true });
         const stream = await openZipEntry(zipFile, entry);
         await streamPipeline(stream, fs.createWriteStream(target));
+        
+         // Verify the created file is not a symlink
+         try {
+           const stats = await fsp.lstat(target);
+           if (stats.isSymbolicLink()) {
+             await fsp.unlink(target);
+             throw new Error(`Symlink detected after extraction: ${entry.fileName}`);
+           }
+         } catch (err) {
+           if (err instanceof Error && 'code' in err && err.code !== 'ENOENT') {
+             throw err;
+           }
+         }
+        
         extractedFiles.push(target);
         zipFile.readEntry();
       } catch (error) {
@@ -133,6 +155,12 @@ async function extractTar(archivePath: string, dest: string, config: PipelineCon
       entries += 1;
       extractedBytes += entry.size ?? 0;
       const target = path.resolve(dest, entryPath);
+      // Cast to any for tar entry type (SymbolicLink check)
+      const entryAny = entry as any;
+      // Reject symlinks explicitly
+      if (entryAny.type === 'SymbolicLink' || entryAny.type === 'Symlink') {
+        return false;
+      }
       return (
         entries <= config.maxArchiveEntries &&
         extractedBytes <= config.maxArchiveBytes &&
@@ -141,14 +169,27 @@ async function extractTar(archivePath: string, dest: string, config: PipelineCon
       );
     },
     onentry(entry) {
-      if (entry.type === 'File') {
-        extractedFiles.push(path.resolve(dest, entry.path));
+      // Cast to any for safety
+      const entryAny = entry as any;
+      if (entryAny.type === 'File') {
+        // Double-check no symlinks slipped through
+        const fullPath = path.resolve(dest, entry.path);
+        try {
+          const stats = fs.statSync(fullPath);
+          if (stats.isSymbolicLink()) {
+            fs.unlinkSync(fullPath);
+            return;
+          }
+        } catch (e) {
+          // Ignore errors
+        }
+        extractedFiles.push(fullPath);
       }
     },
-  });
+   });
 
-  return extractedFiles;
-}
+   return extractedFiles;
+ }
 
 async function extractGzipFile(archivePath: string, dest: string, config: PipelineConfig) {
   const outputName = sanitizeSegment(path.basename(archivePath).replace(/\.gz$/i, ''), 'decompressed-file');

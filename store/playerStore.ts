@@ -225,8 +225,11 @@ export const usePlayerStore = create<PlayerStore>()(
         const token = get()._loadToken + 1;
 
         get()._stopProgressLoop();
-        previousSound?.stop();
-        previousSound?.unload();
+        // Stop and unload previous sound
+        if (previousSound) {
+          previousSound.stop();
+          previousSound.unload();
+        }
 
         if (!song) {
           set({
@@ -251,59 +254,66 @@ export const usePlayerStore = create<PlayerStore>()(
           _loadToken: token,
         });
 
-        try {
-          const Howl = await loadHowler();
-          if (get()._loadToken !== token) return;
+         try {
+           const Howl = await loadHowler();
+           // Immediate token check after await
+           if (get()._loadToken !== token) return;
 
-          const nextSound = new Howl({
-            src: [song.url],
-            html5: true,
-            volume: get().volume,
-            preload: true,
-            onload: () => {
-              if (get()._loadToken !== token) return;
-              set({ duration: nextSound.duration(), isLoading: false });
-            },
-            onplay: () => {
-              if (get()._loadToken !== token) return;
-              set({ isPlaying: true, isLoading: false });
-              get()._startProgressLoop();
-            },
-            onpause: () => {
-              if (get()._loadToken !== token) return;
-              set({ isPlaying: false });
-              get()._stopProgressLoop();
-            },
-            onstop: () => {
-              if (get()._loadToken !== token) return;
-              set({ isPlaying: false, progress: 0 });
-              get()._stopProgressLoop();
-            },
-            onend: () => {
-              if (get()._loadToken !== token) return;
-              set({ progress: 0, isPlaying: false });
-              get()._stopProgressLoop();
-              get().playNext();
-            },
-            onloaderror: (_id, error) => {
-              if (get()._loadToken !== token) return;
-              console.error('Error loading audio:', error);
+           const nextSound = new Howl({
+             src: [song.url],
+             html5: true,
+             volume: get().volume,
+             preload: true,
+             onload: () => {
+               if (get()._loadToken !== token) {
+                 nextSound.unload();
+                 return;
+               }
+               set({ duration: nextSound.duration(), isLoading: false });
+             },
+             onplay: () => {
+               if (get()._loadToken !== token) {
+                 nextSound.pause();
+                 return;
+               }
+               set({ isPlaying: true, isLoading: false });
+               get()._startProgressLoop();
+             },
+             onpause: () => {
+               if (get()._loadToken !== token) return;
+               set({ isPlaying: false });
+               get()._stopProgressLoop();
+             },
+             onstop: () => {
+               if (get()._loadToken !== token) return;
+               set({ isPlaying: false, progress: 0 });
+               get()._stopProgressLoop();
+             },
+             onend: () => {
+               if (get()._loadToken !== token) return;
+               set({ progress: 0, isPlaying: false });
+               get()._stopProgressLoop();
+               get().playNext();
+             },
+             onloaderror: (_id, error) => {
+               if (get()._loadToken !== token) return;
+               console.error('Error loading audio:', error);
+               set({ isLoading: false, isPlaying: false });
+             },
+             onplayerror: () => {
+               nextSound.once('unlock', () => nextSound.play());
+             },
+           });
+
+           set({ sound: nextSound });
+           if (autoplay) nextSound.play();
+          } catch (error) {
+            console.error('Unable to initialize audio player:', error);
+            if (get()._loadToken === token) {
               set({ isLoading: false, isPlaying: false });
-            },
-            onplayerror: () => {
-              nextSound.once('unlock', () => nextSound.play());
-            },
-          });
-
-          set({ sound: nextSound });
-          if (autoplay) nextSound.play();
-        } catch (error) {
-          console.error('Unable to initialize audio player:', error);
-          if (get()._loadToken === token) {
-            set({ isLoading: false, isPlaying: false });
+            }
           }
-        }
-      },
+        },
 
       _startProgressLoop: () => {
         get()._stopProgressLoop();

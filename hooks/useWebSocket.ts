@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
+import { supabase } from '@/lib/supabase/client';
 
 type WSMessage = {
   type: 'play' | 'pause' | 'seek' | 'track_change' | 'queue_update' | 'connected' | 'joined';
@@ -15,21 +16,29 @@ export function useWebSocket(roomId: string, userId?: string) {
   const handlersRef = useRef<Set<WSHandler>>(new Set());
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const connect = useCallback(() => {
+  const connect = useCallback(async () => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsHost = process.env.NEXT_PUBLIC_WS_URL || `${protocol}//localhost:3001`;
-    const ws = new WebSocket(wsHost);
+
+    // Get current Supabase session token
+    const { data: { session } } = await supabase.auth.getSession();
+    const token = session?.access_token;
+
+    // Include token as query parameter for server-side validation
+    const wsUrl = token ? `${wsHost}?token=${encodeURIComponent(token)}` : wsHost;
+    const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
       console.log('WebSocket connected');
-      // Join room
+      // Join room with authentication
       ws.send(
         JSON.stringify({
           type: 'join',
           roomId,
-          userId,
+          userId: userId || session?.user?.id,
+          authToken: token,
         })
       );
     };

@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useServiceWorker } from '@/hooks/useServiceWorker';
+import { ErrorBoundary } from './ErrorBoundary';
 
 export function Providers({ children }: { children: ReactNode }) {
   useServiceWorker();
@@ -20,5 +21,9 @@ export function Providers({ children }: { children: ReactNode }) {
       })
   );
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </ErrorBoundary>
+  );
 }

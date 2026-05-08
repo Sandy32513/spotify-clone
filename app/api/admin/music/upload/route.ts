@@ -6,6 +6,7 @@ import { isAdminAuthenticated } from '@/lib/admin-auth';
 import { createPipelineConfig, runMusicPipeline } from '@/lib/music-pipeline';
 import { ARCHIVE_EXTENSIONS, AUDIO_EXTENSIONS, DANGEROUS_EXTENSIONS } from '@/lib/music-pipeline/constants';
 import { assertInside, sanitizeSegment } from '@/lib/music-pipeline/pathSafety';
+import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -53,6 +54,18 @@ function summarizeFile(assetPath: string, fileSize: number, reason: string) {
 }
 
 export async function POST(request: Request) {
+  // Rate limiting: 5 uploads per hour per IP
+  const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                   request.headers.get('x-real-ip') || 
+                   'anonymous';
+  const { allowed, remaining } = rateLimit(`admin-upload:${clientIP}`);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Upload limit exceeded. Maximum 5 batches per hour.' },
+      { status: 429 }
+    );
+  }
+
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json(
       { error: 'Please contact administrator for upload access.' },
@@ -123,57 +136,62 @@ export async function POST(request: Request) {
     await fs.writeFile(target, Buffer.from(await item.file.arrayBuffer()));
   }
 
-  const { summary, reportDir, config } = await runMusicPipeline({
-    ...baseConfig,
-    rootDir: incomingDir,
-    workDir: path.join(stagingDir, '.music-pipeline'),
-    extractionDir: path.join(stagingDir, '.music-pipeline', 'extracted'),
-    reportsDir: path.join(baseConfig.reportsDir, 'admin-uploads'),
-    organizedDir: path.join(stagingDir, 'Organized'),
-    corruptedDir: path.join(stagingDir, 'Corrupted'),
-    dryRun: false,
-    extractArchives: true,
-    organize: false,
-    moveCorrupted: true,
-    upload: true,
-    insertDatabase: true,
-  });
+   const { summary, reportDir, config } = await runMusicPipeline({
+     ...baseConfig,
+     rootDir: incomingDir,
+     workDir: path.join(stagingDir, '.music-pipeline'),
+     extractionDir: path.join(stagingDir, '.music-pipeline', 'extracted'),
+     reportsDir: path.join(baseConfig.reportsDir, 'admin-uploads'),
+     organizedDir: path.join(stagingDir, 'Organized'),
+     corruptedDir: path.join(stagingDir, 'Corrupted'),
+     dryRun: false,
+     extractArchives: true,
+     organize: false,
+     moveCorrupted: true,
+     upload: true,
+     insertDatabase: true,
+   });
 
-  return NextResponse.json({
-    uploadId,
-    reportDir,
-    rejected,
-    storageProvider: config.cloudProvider,
-    databaseProvider: config.databaseProvider,
-    totals: summary.totals,
-    scan: summary.scan.totals,
-    duplicates: summary.duplicates,
-    files: summary.assets.map((asset) => ({
-      name: asset.file.filename,
-      path: asset.file.relativePath,
-      status: asset.status,
-      reason: asset.reason,
-      title: asset.metadata.title,
-      artist: asset.metadata.artist,
-      album: asset.metadata.album,
-      durationSeconds: asset.metadata.durationSeconds,
-      bitrate: asset.metadata.bitrate,
-      codec: asset.metadata.codec ?? asset.metadata.container,
-      fileSize: asset.file.size,
-      checksum: asset.checksum,
-      duplicateOf: asset.duplicateOf,
-      upload: asset.upload,
-      database: asset.database,
-    })),
-    unsupportedFiles: summary.scan.unsupportedFiles.map((file) => ({
-      name: file.filename,
-      path: file.relativePath,
-      size: file.size,
-    })),
-    errors: summary.errors,
-    warnings: [
-      config.cloudProvider === 'none' ? 'MUSIC_PIPELINE_CLOUD_PROVIDER is none; cloud upload was skipped.' : null,
-      config.databaseProvider === 'none' ? 'MUSIC_PIPELINE_DATABASE_PROVIDER is none; database insert was skipped.' : null,
-    ].filter(Boolean),
-  });
-}
+   const response = NextResponse.json({
+     uploadId,
+     reportDir,
+     rejected,
+     storageProvider: config.cloudProvider,
+     databaseProvider: config.databaseProvider,
+     totals: summary.totals,
+     scan: summary.scan.totals,
+     duplicates: summary.duplicates,
+     files: summary.assets.map((asset) => ({
+       name: asset.file.filename,
+       path: asset.file.relativePath,
+       status: asset.status,
+       reason: asset.reason,
+       title: asset.metadata.title,
+       artist: asset.metadata.artist,
+       album: asset.metadata.album,
+       durationSeconds: asset.metadata.durationSeconds,
+       bitrate: asset.metadata.bitrate,
+       codec: asset.metadata.codec ?? asset.metadata.container,
+       fileSize: asset.file.size,
+       checksum: asset.checksum,
+       duplicateOf: asset.duplicateOf,
+       upload: asset.upload,
+       database: asset.database,
+     })),
+     unsupportedFiles: summary.scan.unsupportedFiles.map((file) => ({
+       name: file.filename,
+       path: file.relativePath,
+       size: file.size,
+     })),
+     errors: summary.errors,
+     warnings: [
+       config.cloudProvider === 'none' ? 'MUSIC_PIPELINE_CLOUD_PROVIDER is none; cloud upload was skipped.' : null,
+       config.databaseProvider === 'none' ? 'MUSIC_PIPELINE_DATABASE_PROVIDER is none; database insert was skipped.' : null,
+     ].filter(Boolean),
+   });
+
+    // Add rate limit headers
+    const { remaining: finalRemaining } = rateLimit(`admin-upload:${clientIP}`);
+    response.headers.set('X-RateLimit-Remaining', finalRemaining.toString());
+    return response;
+  }

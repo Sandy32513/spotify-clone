@@ -66,10 +66,12 @@ export function verifyAdminCredentials(username: string, password: string) {
 }
 
 export function setAdminSession(response: NextResponse) {
-  const isSecure = process.env.NODE_ENV === 'production';
+  const isSecure = process.env.NODE_ENV === 'production' && 
+                   process.env.NEXTAUTH_URL?.startsWith('https://');
+  // In production with HTTPS, use Secure flag. In development, allow non-secure.
   response.cookies.set(COOKIE_NAME, createSessionToken(), {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     secure: isSecure,
     maxAge: SESSION_TTL_SECONDS,
     path: '/',
@@ -77,10 +79,11 @@ export function setAdminSession(response: NextResponse) {
 }
 
 export function clearAdminSession(response: NextResponse) {
-  const isSecure = process.env.NODE_ENV === 'production';
+  const isSecure = process.env.NODE_ENV === 'production' && 
+                   process.env.NEXTAUTH_URL?.startsWith('https://');
   response.cookies.set(COOKIE_NAME, '', {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     secure: isSecure,
     maxAge: 0,
     path: '/',
