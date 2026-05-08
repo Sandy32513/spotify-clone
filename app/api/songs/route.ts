@@ -43,7 +43,7 @@ export async function POST(request: Request) {
    let urlObj;
    try {
      urlObj = new URL(url);
-   } catch (err) {
+    } catch {
      return NextResponse.json(
        { error: 'Invalid URL format' },
        { status: 400 }
