@@ -50,3 +50,22 @@ export const IGNORED_EXTENSIONS = new Set([
   '.crdownload',
 ]);
 
+export const DANGEROUS_EXTENSIONS = new Set([
+  '.bat',
+  '.cmd',
+  '.com',
+  '.cpl',
+  '.dll',
+  '.exe',
+  '.hta',
+  '.js',
+  '.jse',
+  '.lnk',
+  '.msi',
+  '.ps1',
+  '.scr',
+  '.sh',
+  '.vbe',
+  '.vbs',
+  '.wsf',
+]);

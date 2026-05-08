@@ -11,7 +11,15 @@ import { writeReports } from './reports';
 import { scanDirectory } from './scanner';
 import { insertAssetRecord } from './database';
 import { uploadAsset } from './uploaders';
-import type { FileRecord, PipelineConfig, PipelineError, PipelineSummary, ScanReport, ValidatedAudioAsset } from './types';
+import type {
+  ArchiveResult,
+  FileRecord,
+  PipelineConfig,
+  PipelineError,
+  PipelineSummary,
+  ScanReport,
+  ValidatedAudioAsset,
+} from './types';
 
 function mergeScans(primary: ScanReport, scans: ScanReport[]): ScanReport {
   const files = [primary.files, ...scans.map((scan) => scan.files)].flat();
@@ -88,6 +96,18 @@ async function validateFiles(files: FileRecord[], config: PipelineConfig, errors
   return assets.filter(Boolean) as ValidatedAudioAsset[];
 }
 
+async function extractArchiveWithRetries(archive: FileRecord, config: PipelineConfig) {
+  let result = await extractArchive(archive, config);
+  let attempts = 0;
+
+  while (result.status === 'failed' && attempts < config.archiveExtractionRetries) {
+    attempts += 1;
+    result = await extractArchive(archive, config);
+  }
+
+  return result;
+}
+
 export async function runMusicPipeline(overrides: Partial<PipelineConfig> = {}) {
   const config = createPipelineConfig(overrides);
   const startedAt = new Date().toISOString();
@@ -105,25 +125,45 @@ export async function runMusicPipeline(overrides: Partial<PipelineConfig> = {}) 
   const initialScan = await scanDirectory(config);
   await logger.info('scan-complete', initialScan.totals);
 
-  const extraction = await Promise.all(
-    initialScan.archives.map(async (archive) => {
-      const result = await extractArchive(archive, config);
-      if (result.status === 'failed') {
-        errors.push({
-          stage: 'archive-extraction',
-          path: archive.absolutePath,
-          message: result.error ?? 'Archive extraction failed',
-        });
-      }
-      return result;
-    })
-  );
+  const extraction: ArchiveResult[] = [];
+  const extractedScans: ScanReport[] = [];
+  const seenArchives = new Set<string>();
+  let archivesToExtract = initialScan.archives;
+  let depth = 0;
 
-  const extractedScans = [];
-  for (const result of extraction) {
-    if (result.status === 'extracted' && result.extractedDir) {
-      extractedScans.push(await scanDirectory(config, result.extractedDir, 'extracted', result.archivePath));
+  while (archivesToExtract.length > 0 && depth < config.maxArchiveDepth) {
+    const currentBatch = archivesToExtract.filter((archive) => !seenArchives.has(archive.absolutePath));
+    if (currentBatch.length === 0) break;
+
+    for (const archive of currentBatch) seenArchives.add(archive.absolutePath);
+
+    const batchResults = await Promise.all(
+      currentBatch.map(async (archive) => {
+        const result = await extractArchiveWithRetries(archive, config);
+        if (result.status === 'failed') {
+          errors.push({
+            stage: 'archive-extraction',
+            path: archive.absolutePath,
+            message: result.error ?? 'Archive extraction failed',
+          });
+        }
+        return result;
+      })
+    );
+
+    extraction.push(...batchResults);
+    const nextArchives: FileRecord[] = [];
+
+    for (const result of batchResults) {
+      if (result.status === 'extracted' && result.extractedDir) {
+        const extractedScan = await scanDirectory(config, result.extractedDir, 'extracted', result.archivePath);
+        extractedScans.push(extractedScan);
+        nextArchives.push(...extractedScan.archives);
+      }
     }
+
+    archivesToExtract = config.extractArchives ? nextArchives : [];
+    depth += 1;
   }
 
   const scan = mergeScans(initialScan, extractedScans);

@@ -1,0 +1,745 @@
+
+> spotify-clone@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3000
+
+   ▲ Next.js 15.5.18
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.7s
+ ○ Compiling / ...
+ ✓ Compiled / in 9.4s (922 modules)
+ GET / 200 in 10886ms
+ ✓ Compiled in 814ms (380 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 2.6s (912 modules)
+ GET /favicon.ico 200 in 3377ms
+ GET /icon-192.png 404 in 3282ms
+ GET / 200 in 767ms
+ GET /favicon.ico 200 in 347ms
+ GET /icon-192.png 404 in 394ms
+ ○ Compiling /auth/login ...
+ ✓ Compiled /auth/login in 1965ms (919 modules)
+ GET /auth/login 200 in 2788ms
+ GET /icon-192.png 404 in 350ms
+ GET / 200 in 650ms
+ GET /icon-192.png 404 in 392ms
+ GET /auth/login 200 in 341ms
+ GET /icon-192.png 404 in 183ms
+ ○ Compiling /auth/signup ...
+ ✓ Compiled /auth/signup in 1204ms (926 modules)
+ GET /auth/signup 200 in 1554ms
+ GET /auth/signup 200 in 265ms
+ GET /icon-192.png 404 in 329ms
+ GET /auth/login?message=Check+your+email+for+confirmation 200 in 148ms
+ GET /icon-192.png 404 in 203ms
+ GET /icon-192.png 404 in 154ms
+ GET /?code=c483d5a0-c7bd-4ac1-8e0e-a2255e65bb62 200 in 711ms
+ GET /icon-192.png 404 in 222ms
+ ✓ Compiled in 5.5s (370 modules)
+ ✓ Compiled in 207ms (370 modules)
+ GET / 200 in 184ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1467ms (909 modules)
+ GET /icon-192.png 404 in 2565ms
+ ✓ Compiled in 311ms (374 modules)
+ ✓ Compiled in 269ms (374 modules)
+ GET / 200 in 698ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 3.3s (940 modules)
+ GET /favicon.ico 200 in 4412ms
+ GET /icon-192.png 404 in 4414ms
+ GET / 200 in 1108ms
+ GET /icon-192.png 404 in 104ms
+ ✓ Compiled in 4.8s (388 modules)
+ ✓ Compiled in 1007ms (388 modules)
+ GET / 200 in 285ms
+ GET / 200 in 58ms
+ GET /icon-192.png 404 in 86ms
+ ✓ Compiled in 2.1s (384 modules)
+ ✓ Compiled in 597ms (384 modules)
+ GET / 200 in 149ms
+ GET / 200 in 56ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 583ms (909 modules)
+ GET /icon-192.png 404 in 1320ms
+ GET / 200 in 75ms
+ GET /icon-192.png 404 in 96ms
+ ✓ Compiled in 1516ms (388 modules)
+ GET / 200 in 98ms
+ GET /icon-192.png 404 in 117ms
+ ✓ Compiled in 1350ms (384 modules)
+ GET / 200 in 55ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 507ms (909 modules)
+ GET /icon-192.png 404 in 918ms
+ ✓ Compiled in 3.5s (923 modules)
+ GET / 200 in 2594ms
+ GET / 200 in 53ms
+ GET /icon-192.png 404 in 236ms
+ ✓ Compiled in 2.1s (384 modules)
+ ✓ Compiled in 726ms (384 modules)
+ GET / 200 in 128ms
+ GET / 200 in 63ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 560ms (909 modules)
+ GET /icon-192.png 404 in 1205ms
+ ✓ Compiled in 6s (384 modules)
+ ✓ Compiled in 2.1s (384 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 13.9s (1265 modules)
+ GET / 500 in 14913ms
+ GET / 200 in 264ms
+ GET / 200 in 41ms
+ GET / 200 in 47ms
+ GET / 200 in 50ms
+ GET / 200 in 733ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 4.5s (1256 modules)
+ GET /icon-192.png 404 in 3183ms
+ ✓ Compiled in 2.9s (1256 modules)
+ ✓ Compiled in 1707ms (1256 modules)
+ ✓ Compiled in 1016ms (541 modules)
+ ✓ Compiled in 1203ms (541 modules)
+ ✓ Compiled in 2.6s (540 modules)
+ ✓ Compiled in 1306ms (536 modules)
+ ✓ Compiled in 1820ms (536 modules)
+ ✓ Compiled in 2.3s (536 modules)
+ ✓ Compiled in 3.7s (1155 modules)
+ ✓ Compiled in 15s (1169 modules)
+ ✓ Compiled in 4.3s (536 modules)
+ ✓ Compiled in 12.9s (1169 modules)
+ ✓ Compiled in 1903ms (536 modules)
+ ✓ Compiled in 1492ms (536 modules)
+ ✓ Compiled in 3.2s (536 modules)
+ ✓ Compiled in 2.3s (536 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 2.7s (1251 modules)
+ GET / 500 in 19875ms
+ GET / 500 in 126ms
+ ○ Compiling /admin/music ...
+ ✓ Compiled /admin/music in 1079ms (1210 modules)
+ GET /admin/music 200 in 1789ms
+ ✓ Compiled /api/admin/session in 405ms (1237 modules)
+ GET /api/admin/session 200 in 555ms
+ ✓ Compiled /api/admin/login in 245ms (1239 modules)
+ POST /api/admin/login 200 in 318ms
+ GET /api/admin/session 200 in 23ms
+ GET / 200 in 482ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 745ms (1187 modules)
+ GET /icon-192.png 404 in 1028ms
+   Reload env: .env.local
+ ✓ Compiled in 946ms (1182 modules)
+ ✓ Compiled in 4.5s (1196 modules)
+ GET / 200 in 968ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 6.8s (1201 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1937ms (1283 modules)
+ ○ Compiling /liked ...
+ ✓ Compiled /liked in 1138ms (1290 modules)
+ GET /liked 200 in 1857ms
+ ○ Compiling /library ...
+ ✓ Compiled /library in 1049ms (1297 modules)
+ GET / 200 in 712ms
+ GET /library 200 in 1425ms
+ GET / 200 in 798ms
+ GET / 200 in 136ms
+ ✓ Compiled in 2.9s (572 modules)
+ GET / 500 in 918ms
+ GET / 500 in 362ms
+ GET / 500 in 710ms
+ GET / 500 in 313ms
+ ✓ Compiled in 8.2s (567 modules)
+ ✓ Compiled in 1080ms (567 modules)
+ GET / 200 in 6936ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 13.4s (1205 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 6.1s (1287 modules)
+ ✓ Compiled in 10.2s (1307 modules)
+ GET / 500 in 9475ms
+ GET / 500 in 1198ms
+ ✓ Compiled in 4.1s (1313 modules)
+ GET / 500 in 1653ms
+ GET / 500 in 361ms
+ GET / 500 in 670ms
+ GET / 500 in 331ms
+ GET / 500 in 594ms
+ GET / 500 in 260ms
+ GET / 500 in 646ms
+ GET / 500 in 274ms
+ GET / 500 in 583ms
+ GET / 500 in 287ms
+ GET / 500 in 559ms
+ GET / 500 in 262ms
+ GET / 500 in 545ms
+ GET / 500 in 248ms
+ GET / 500 in 548ms
+ GET / 500 in 253ms
+ GET / 500 in 559ms
+ GET / 500 in 256ms
+ GET / 500 in 570ms
+ GET / 500 in 268ms
+ GET / 500 in 579ms
+ GET / 500 in 281ms
+ GET / 500 in 526ms
+ GET / 500 in 247ms
+ GET / 500 in 588ms
+ GET / 500 in 263ms
+ GET / 500 in 542ms
+ GET / 500 in 246ms
+ GET / 500 in 617ms
+ GET / 500 in 335ms
+ GET / 500 in 603ms
+ GET / 500 in 273ms
+ GET / 500 in 558ms
+ GET / 500 in 254ms
+ GET / 500 in 560ms
+ GET / 500 in 280ms
+ GET / 500 in 554ms
+ GET / 500 in 275ms
+ GET / 500 in 542ms
+ GET / 500 in 246ms
+ GET / 500 in 655ms
+ GET / 500 in 301ms
+ GET / 500 in 554ms
+ GET / 500 in 259ms
+ GET / 500 in 541ms
+ GET / 500 in 261ms
+ GET / 500 in 589ms
+ GET / 500 in 277ms
+ GET / 500 in 537ms
+ GET / 500 in 256ms
+ GET / 500 in 571ms
+ GET / 500 in 267ms
+ GET / 500 in 543ms
+ GET / 500 in 249ms
+ GET / 500 in 545ms
+ GET / 500 in 262ms
+ GET / 500 in 557ms
+ GET / 500 in 260ms
+ GET / 500 in 601ms
+ GET / 500 in 288ms
+ GET / 500 in 751ms
+ GET / 500 in 297ms
+ GET / 500 in 623ms
+ GET / 500 in 295ms
+ GET / 500 in 635ms
+ GET / 500 in 299ms
+ GET / 500 in 555ms
+ GET / 500 in 245ms
+ GET / 500 in 738ms
+ GET / 500 in 289ms
+ GET / 500 in 598ms
+ GET / 500 in 281ms
+ GET / 500 in 600ms
+ GET / 500 in 264ms
+ GET / 500 in 581ms
+ GET / 500 in 254ms
+ GET / 500 in 547ms
+ GET / 500 in 265ms
+ GET / 500 in 560ms
+ GET / 500 in 266ms
+ GET / 500 in 531ms
+ GET / 500 in 252ms
+ GET / 500 in 561ms
+ GET / 500 in 247ms
+ GET / 500 in 565ms
+ GET / 500 in 267ms
+ GET / 500 in 579ms
+ GET / 500 in 277ms
+ GET / 500 in 673ms
+ GET / 500 in 358ms
+ GET / 500 in 542ms
+ GET / 500 in 259ms
+ GET / 500 in 556ms
+ GET / 500 in 259ms
+ GET / 500 in 569ms
+ GET / 500 in 256ms
+ GET / 500 in 554ms
+ GET / 500 in 268ms
+ GET / 500 in 573ms
+ GET / 500 in 268ms
+ GET / 500 in 950ms
+ GET / 500 in 445ms
+ GET / 500 in 1794ms
+ GET / 500 in 325ms
+ GET / 500 in 651ms
+ GET / 500 in 317ms
+ GET / 500 in 553ms
+ GET / 500 in 259ms
+ GET / 500 in 601ms
+ GET / 500 in 275ms
+ GET / 500 in 677ms
+ GET / 500 in 273ms
+ GET / 500 in 714ms
+ GET / 500 in 314ms
+ GET / 500 in 584ms
+ GET / 500 in 278ms
+ GET / 500 in 566ms
+ GET / 500 in 270ms
+ GET / 500 in 554ms
+ GET / 500 in 260ms
+ GET / 500 in 561ms
+ GET / 500 in 265ms
+ GET / 500 in 539ms
+ GET / 500 in 263ms
+ GET / 500 in 647ms
+ GET / 500 in 298ms
+ GET / 500 in 658ms
+ GET / 500 in 292ms
+ GET / 500 in 696ms
+ GET / 500 in 281ms
+ GET / 500 in 754ms
+ GET / 500 in 266ms
+ GET / 500 in 571ms
+ GET / 500 in 269ms
+ GET / 500 in 544ms
+ GET / 500 in 263ms
+ GET / 500 in 540ms
+ GET / 500 in 257ms
+ GET / 500 in 792ms
+ GET / 500 in 342ms
+ GET / 500 in 722ms
+ GET / 500 in 322ms
+ GET / 500 in 1210ms
+ GET / 500 in 787ms
+ GET / 500 in 1036ms
+ GET / 500 in 436ms
+ GET / 500 in 808ms
+ GET / 500 in 371ms
+ GET / 500 in 2004ms
+ GET / 500 in 1453ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 13.7s (752 modules)
+ GET /favicon.ico 200 in 15787ms
+ GET / 500 in 1572ms
+ GET / 500 in 770ms
+ GET / 500 in 1172ms
+ GET / 500 in 1691ms
+ GET / 500 in 4890ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1469ms (755 modules)
+ GET /favicon.ico 404 in 1567ms
+ GET / 500 in 2369ms
+ GET / 500 in 322ms
+ GET / 500 in 1701ms
+ GET / 500 in 288ms
+ GET / 500 in 1113ms
+ GET / 500 in 246ms
+ GET / 500 in 1027ms
+ GET / 500 in 275ms
+ GET / 500 in 1089ms
+ GET / 500 in 256ms
+ GET / 500 in 1100ms
+ GET / 500 in 256ms
+ GET / 500 in 1057ms
+ GET / 500 in 255ms
+ GET / 500 in 1253ms
+ GET / 500 in 427ms
+ GET / 500 in 1352ms
+ GET / 500 in 251ms
+ GET / 500 in 1157ms
+ GET / 500 in 254ms
+ GET / 500 in 1166ms
+ GET / 500 in 273ms
+ GET / 500 in 1381ms
+ GET / 500 in 290ms
+ GET / 500 in 1408ms
+ GET / 500 in 281ms
+ GET / 500 in 1219ms
+ GET / 500 in 284ms
+ GET / 500 in 1104ms
+ GET / 500 in 282ms
+ GET / 500 in 1165ms
+ GET / 500 in 282ms
+ GET / 500 in 1529ms
+ GET / 500 in 444ms
+ GET / 500 in 1232ms
+ GET / 500 in 291ms
+ GET / 500 in 1363ms
+ GET / 500 in 431ms
+ GET / 500 in 6517ms
+ GET / 500 in 745ms
+ GET / 500 in 4242ms
+ GET / 500 in 655ms
+ GET / 500 in 2199ms
+ GET / 500 in 528ms
+ GET / 500 in 1791ms
+ GET / 500 in 279ms
+ GET / 500 in 1572ms
+ GET / 500 in 258ms
+ GET / 500 in 1607ms
+ GET / 500 in 536ms
+ GET / 500 in 1421ms
+ GET / 500 in 381ms
+ GET / 500 in 1850ms
+ GET / 500 in 309ms
+ GET / 500 in 1382ms
+ GET / 500 in 272ms
+ GET / 500 in 1642ms
+ GET / 500 in 406ms
+ GET / 500 in 2256ms
+ GET / 500 in 338ms
+ GET / 500 in 2336ms
+ GET / 500 in 324ms
+ GET / 500 in 3663ms
+ GET / 500 in 549ms
+ GET / 500 in 5677ms
+ GET / 500 in 596ms
+ GET / 500 in 3919ms
+ GET / 500 in 313ms
+ GET / 500 in 2514ms
+ GET / 500 in 529ms
+ GET / 500 in 2107ms
+ GET / 500 in 320ms
+ GET / 500 in 4021ms
+ GET / 500 in 369ms
+ GET / 500 in 2133ms
+ GET / 500 in 314ms
+ GET / 500 in 6250ms
+ GET / 500 in 404ms
+ GET / 500 in 2988ms
+ GET / 500 in 292ms
+ GET / 500 in 7095ms
+ GET / 500 in 335ms
+ GET / 500 in 1330ms
+ GET / 500 in 335ms
+ GET / 500 in 1499ms
+ GET / 500 in 257ms
+ GET / 500 in 1041ms
+ GET / 500 in 282ms
+ GET / 500 in 1094ms
+ GET / 500 in 293ms
+ GET / 500 in 1092ms
+ GET / 500 in 291ms
+ GET / 500 in 1098ms
+ GET / 500 in 274ms
+ GET / 500 in 1109ms
+ GET / 500 in 279ms
+ GET / 500 in 1093ms
+ GET / 500 in 295ms
+ GET / 500 in 1125ms
+ GET / 500 in 283ms
+ GET / 500 in 1220ms
+ GET / 500 in 385ms
+ GET / 500 in 1191ms
+ GET / 500 in 298ms
+ GET / 500 in 2714ms
+ GET / 500 in 558ms
+ GET / 500 in 3105ms
+ GET / 500 in 459ms
+ GET / 500 in 12948ms
+ GET / 500 in 1333ms
+ GET / 500 in 7296ms
+ GET / 500 in 620ms
+ GET / 500 in 1838ms
+ GET / 500 in 337ms
+ GET / 500 in 2578ms
+ GET / 500 in 439ms
+ GET / 500 in 2708ms
+ GET / 500 in 373ms
+ GET / 500 in 1836ms
+ GET / 500 in 321ms
+ GET / 500 in 1462ms
+ GET / 500 in 330ms
+ GET / 500 in 1515ms
+ GET / 500 in 321ms
+ GET / 500 in 6269ms
+ GET / 500 in 319ms
+ GET / 500 in 1796ms
+ GET / 500 in 297ms
+ GET / 500 in 1725ms
+ GET / 500 in 263ms
+ GET / 500 in 1524ms
+ GET / 500 in 274ms
+ GET / 500 in 2092ms
+ GET / 500 in 815ms
+ GET / 500 in 1707ms
+ GET / 500 in 281ms
+ GET / 500 in 1655ms
+ GET / 500 in 265ms
+ GET / 500 in 1364ms
+ GET / 500 in 272ms
+ GET / 500 in 1512ms
+ GET / 500 in 293ms
+ GET / 500 in 1517ms
+ GET / 500 in 263ms
+ GET / 500 in 1388ms
+ GET / 500 in 413ms
+ GET / 500 in 1451ms
+ GET / 500 in 324ms
+ GET / 500 in 1584ms
+ GET / 500 in 305ms
+ GET / 500 in 1137ms
+ GET / 500 in 359ms
+ GET / 500 in 1269ms
+ GET / 500 in 254ms
+ GET / 500 in 1781ms
+ GET / 500 in 283ms
+ GET / 500 in 1559ms
+ GET / 500 in 324ms
+ GET / 500 in 1083ms
+ GET / 500 in 266ms
+ GET / 500 in 3307ms
+ GET / 500 in 286ms
+ GET / 500 in 1663ms
+ GET / 500 in 260ms
+ GET / 500 in 2786ms
+ GET / 500 in 394ms
+ GET / 500 in 5886ms
+ GET / 500 in 1160ms
+ GET / 500 in 2130ms
+ GET / 500 in 275ms
+ GET / 500 in 1467ms
+ GET / 500 in 253ms
+ GET / 500 in 1179ms
+ GET / 500 in 270ms
+ GET / 500 in 1106ms
+ GET / 500 in 253ms
+ GET / 500 in 1086ms
+ GET / 500 in 244ms
+ GET / 500 in 1228ms
+ GET / 500 in 261ms
+ GET / 500 in 1103ms
+ GET / 500 in 264ms
+ GET / 500 in 1240ms
+ GET / 500 in 256ms
+ GET / 500 in 1187ms
+ GET / 500 in 251ms
+ GET / 500 in 1086ms
+ GET / 500 in 258ms
+ GET / 500 in 1109ms
+ GET / 500 in 269ms
+ GET / 500 in 1242ms
+ GET / 500 in 286ms
+ GET / 500 in 1196ms
+ GET / 500 in 261ms
+ GET / 500 in 1199ms
+ GET / 500 in 254ms
+ GET / 500 in 1080ms
+ GET / 500 in 289ms
+ GET / 500 in 1039ms
+ GET / 500 in 248ms
+ GET / 500 in 1160ms
+ GET / 500 in 252ms
+ GET / 500 in 1135ms
+ GET / 500 in 270ms
+ GET / 500 in 1326ms
+ GET / 500 in 338ms
+ GET / 500 in 1214ms
+ GET / 500 in 265ms
+ GET / 500 in 1158ms
+ GET / 500 in 281ms
+ GET / 500 in 1135ms
+ GET / 500 in 263ms
+ GET / 500 in 1288ms
+ GET / 500 in 320ms
+ GET / 500 in 1278ms
+ GET / 500 in 259ms
+ GET / 500 in 1352ms
+ GET / 500 in 262ms
+ GET / 500 in 1595ms
+ GET / 500 in 270ms
+ GET / 500 in 1422ms
+ GET / 500 in 358ms
+ GET / 500 in 1341ms
+ GET / 500 in 261ms
+ GET / 500 in 1212ms
+ GET / 500 in 251ms
+ GET / 500 in 1260ms
+ GET / 500 in 299ms
+ GET / 500 in 1217ms
+ GET / 500 in 312ms
+ GET / 500 in 1449ms
+ GET / 500 in 256ms
+ GET / 500 in 1418ms
+ GET / 500 in 260ms
+ GET / 500 in 1628ms
+ GET / 500 in 303ms
+ GET / 500 in 2649ms
+ GET / 500 in 800ms
+ GET / 500 in 1748ms
+ GET / 500 in 282ms
+ GET / 500 in 1732ms
+ GET / 500 in 329ms
+ GET / 500 in 1769ms
+ GET / 500 in 300ms
+ GET / 500 in 2320ms
+ GET / 500 in 409ms
+ GET / 500 in 2265ms
+ GET / 500 in 360ms
+ GET / 500 in 1400ms
+ GET / 500 in 256ms
+ GET / 500 in 1332ms
+ GET / 500 in 285ms
+ GET / 500 in 5141ms
+ GET / 500 in 618ms
+ GET / 500 in 2923ms
+ GET / 500 in 370ms
+ GET / 500 in 1858ms
+ GET / 500 in 289ms
+ GET / 500 in 1760ms
+ GET / 500 in 269ms
+ GET / 500 in 3276ms
+ GET / 500 in 957ms
+ GET / 500 in 1687ms
+ GET / 500 in 282ms
+ GET / 500 in 1270ms
+ GET / 500 in 261ms
+ GET / 500 in 1513ms
+ GET / 500 in 278ms
+ GET / 500 in 5830ms
+ GET / 500 in 3376ms
+ GET / 500 in 3514ms
+ GET / 500 in 438ms
+ GET / 500 in 1884ms
+ GET / 500 in 293ms
+ GET / 500 in 3790ms
+ GET / 500 in 278ms
+ GET / 500 in 2231ms
+ GET / 500 in 906ms
+ GET / 500 in 1497ms
+ GET / 500 in 281ms
+ GET / 500 in 1432ms
+ GET / 500 in 272ms
+ GET / 500 in 1509ms
+ GET / 500 in 280ms
+ GET / 500 in 1583ms
+ GET / 500 in 309ms
+ GET / 500 in 1688ms
+ GET / 500 in 289ms
+ GET / 500 in 1382ms
+ GET / 500 in 272ms
+ GET / 500 in 1417ms
+ GET / 500 in 289ms
+ GET / 500 in 1232ms
+ GET / 500 in 331ms
+ GET / 500 in 1395ms
+ GET / 500 in 301ms
+ GET / 500 in 1125ms
+ GET / 500 in 281ms
+ GET / 500 in 2136ms
+ GET / 500 in 348ms
+ GET / 500 in 1616ms
+ GET / 500 in 314ms
+ GET / 500 in 1934ms
+ GET / 500 in 286ms
+ GET / 500 in 1831ms
+ GET / 500 in 346ms
+ GET / 500 in 2400ms
+ GET / 500 in 302ms
+ GET / 500 in 1389ms
+ GET / 500 in 377ms
+ GET / 500 in 1091ms
+ GET / 500 in 258ms
+ GET / 500 in 1211ms
+ GET / 500 in 256ms
+ GET / 500 in 2984ms
+ GET / 500 in 385ms
+ GET / 500 in 2381ms
+ GET / 500 in 348ms
+ GET / 500 in 2340ms
+ GET / 500 in 267ms
+ GET / 500 in 3062ms
+ GET / 500 in 325ms
+ GET / 500 in 2456ms
+ GET / 500 in 285ms
+ GET / 500 in 1982ms
+ GET / 500 in 348ms
+ GET / 500 in 5211ms
+ GET / 500 in 372ms
+ GET / 500 in 1430ms
+ GET / 500 in 282ms
+ GET / 500 in 1153ms
+ GET / 500 in 281ms
+ GET / 500 in 1086ms
+ GET / 500 in 281ms
+ GET / 500 in 1043ms
+ GET / 500 in 286ms
+ GET / 500 in 1086ms
+ GET / 500 in 253ms
+ GET / 500 in 1242ms
+ GET / 500 in 256ms
+ GET / 500 in 1065ms
+ GET / 500 in 260ms
+ GET / 500 in 1086ms
+ GET / 500 in 265ms
+ GET / 500 in 1121ms
+ GET / 500 in 246ms
+ GET / 500 in 1085ms
+ GET / 500 in 253ms
+ GET / 500 in 1102ms
+ GET / 500 in 256ms
+ GET / 500 in 1380ms
+ GET / 500 in 490ms
+ GET / 500 in 1116ms
+ GET / 500 in 250ms
+ GET / 500 in 1085ms
+ GET / 500 in 250ms
+ GET / 500 in 1010ms
+ GET / 500 in 265ms
+ GET / 500 in 1070ms
+ GET / 500 in 275ms
+ GET / 500 in 1759ms
+ GET / 500 in 316ms
+ GET / 500 in 6124ms
+ GET / 500 in 367ms
+ GET / 500 in 3645ms
+ GET / 500 in 359ms
+ GET / 500 in 3628ms
+ GET / 500 in 1094ms
+ GET / 500 in 1776ms
+ GET / 500 in 314ms
+ GET / 500 in 3264ms
+ GET / 500 in 364ms
+ GET / 500 in 3036ms
+ GET / 500 in 371ms
+ GET / 500 in 1751ms
+ GET / 500 in 289ms
+ GET / 500 in 4337ms
+ GET / 500 in 493ms
+ GET / 500 in 2647ms
+ GET / 500 in 331ms
+ GET / 500 in 4621ms
+ GET / 500 in 2075ms
+ GET / 500 in 1987ms
+ GET / 500 in 324ms
+ GET / 500 in 1538ms
+ GET / 500 in 287ms
+ GET / 500 in 1478ms
+ GET / 500 in 276ms
+ GET / 500 in 1954ms
+ GET / 500 in 550ms
+ GET / 500 in 1639ms
+ GET / 500 in 302ms
+ GET / 500 in 2085ms
+ GET / 500 in 280ms
+ GET / 500 in 1758ms
+ GET / 500 in 284ms
+ GET / 500 in 1845ms
+ GET / 500 in 291ms
+ GET / 500 in 1297ms
+ GET / 500 in 318ms
+ GET / 500 in 11256ms
+ GET / 500 in 465ms
+ ✓ Compiled in 14.3s (570 modules)
+ ✓ Compiled in 2.2s (570 modules)
+   ▲ Next.js 15.5.18
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 7.4s
+   ▲ Next.js 15.5.18
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 12.1s

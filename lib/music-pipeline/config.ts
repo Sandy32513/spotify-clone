@@ -40,6 +40,8 @@ export function createPipelineConfig(overrides: Partial<PipelineConfig> = {}): P
     uploadParallelism: overrides.uploadParallelism ?? intFromEnv(process.env.MUSIC_PIPELINE_UPLOAD_PARALLELISM, 3),
     maxArchiveEntries: overrides.maxArchiveEntries ?? intFromEnv(process.env.MUSIC_PIPELINE_MAX_ARCHIVE_ENTRIES, 10000),
     maxArchiveBytes: overrides.maxArchiveBytes ?? intFromEnv(process.env.MUSIC_PIPELINE_MAX_ARCHIVE_BYTES, 20 * 1024 * 1024 * 1024),
+    maxArchiveDepth: overrides.maxArchiveDepth ?? intFromEnv(process.env.MUSIC_PIPELINE_MAX_ARCHIVE_DEPTH, 3),
+    archiveExtractionRetries: overrides.archiveExtractionRetries ?? intFromEnv(process.env.MUSIC_PIPELINE_ARCHIVE_RETRIES, 2),
     maxAudioBytes: overrides.maxAudioBytes ?? intFromEnv(process.env.MUSIC_PIPELINE_MAX_AUDIO_BYTES, 1024 * 1024 * 1024),
     cloudProvider: overrides.cloudProvider ?? (process.env.MUSIC_PIPELINE_CLOUD_PROVIDER as PipelineConfig['cloudProvider']) ?? 'none',
     databaseProvider: overrides.databaseProvider ?? (process.env.MUSIC_PIPELINE_DATABASE_PROVIDER as PipelineConfig['databaseProvider']) ?? 'none',
@@ -51,4 +53,3 @@ export function createPipelineConfig(overrides: Partial<PipelineConfig> = {}): P
     apiToken: overrides.apiToken ?? process.env.MUSIC_PIPELINE_API_TOKEN,
   };
 }
-

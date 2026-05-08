@@ -98,12 +98,16 @@ export async function uploadAsset(asset: ValidatedAudioAsset, config: PipelineCo
     }
 
     const publicUrl = supabase.storage.from(config.supabaseStorageBucket).getPublicUrl(objectKey).data.publicUrl;
+    const { data: signedData } = await supabase.storage
+      .from(config.supabaseStorageBucket)
+      .createSignedUrl(objectKey, 60 * 60 * 24 * 7);
+
     return {
       status: 'uploaded',
       provider: 'supabase',
       objectKey,
       publicUrl,
-      secureUrl: publicUrl,
+      secureUrl: signedData?.signedUrl ?? publicUrl,
       cdnUrl: publicUrl,
       uploadId: asset.checksum,
     };
@@ -115,4 +119,3 @@ export async function uploadAsset(asset: ValidatedAudioAsset, config: PipelineCo
     error: `Unsupported cloud provider: ${config.cloudProvider}`,
   };
 }
-

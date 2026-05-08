@@ -1,0 +1,11 @@
+services:
+  music-pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    env_file:
+      - .env.local
+    volumes:
+      - "C:/Users/SANDY/Music:C:/Users/SANDY/Music"
+    command: ["npm", "run", "music:analyze"]
+

@@ -520,6 +520,24 @@ create table if not exists public.music_assets (
   constraint music_assets_file_size_chk check (file_size >= 0)
 );
 
+-- Cloud uploads tracking
+create table if not exists public.cloud_uploads (
+  id uuid primary key default gen_random_uuid(),
+  music_asset_id uuid references public.music_assets(id) on delete set null,
+  storage_file_id uuid references public.storage_files(id) on delete set null,
+  provider text not null default 'supabase',
+  bucket_id text not null,
+  object_key text not null,
+  status text not null default 'completed',
+  public_url text,
+  secure_url text,
+  cdn_url text,
+  upload_id text not null,
+  completed_at timestamptz,
+  created_at timestamptz not null default now(),
+  unique (provider, upload_id)
+);
+
 -- ============================================================================
 -- INDEXES FOR PERFORMANCE
 -- ============================================================================
@@ -722,6 +740,11 @@ create policy if not exists music_assets_admin_select on public.music_assets for
   using ((select app_private.is_admin()));
 
 create policy if not exists music_assets_admin_write on public.music_assets for all to authenticated
+  using ((select app_private.is_admin()))
+  with check ((select app_private.is_admin()));
+
+-- Cloud uploads policies
+create policy if not exists cloud_uploads_admin on public.cloud_uploads for all to authenticated
   using ((select app_private.is_admin()))
   with check ((select app_private.is_admin()));
 

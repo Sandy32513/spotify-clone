@@ -5,14 +5,21 @@ import path from 'path';
 import { createGunzip } from 'zlib';
 import { Transform } from 'stream';
 import { pipeline as streamPipeline } from 'stream/promises';
-import tar from 'tar';
+import * as tar from 'tar';
 import * as yauzl from 'yauzl';
+import { DANGEROUS_EXTENSIONS } from './constants';
 import { sanitizeSegment, assertInside, isInside, uniquePath } from './pathSafety';
 import type { ArchiveResult, FileRecord, PipelineConfig } from './types';
+
+const MAX_COMPRESSION_RATIO = 100;
 
 function archiveBaseName(archivePath: string) {
   const basename = path.basename(archivePath).replace(/(\.tar\.gz|\.tgz|\.zip|\.rar|\.7z|\.tar|\.gz)$/i, '');
   return sanitizeSegment(basename, 'Archive');
+}
+
+function isDangerousPath(filePath: string) {
+  return DANGEROUS_EXTENSIONS.has(path.extname(filePath).toLowerCase());
 }
 
 async function destinationFor(config: PipelineConfig, archivePath: string) {
@@ -75,6 +82,20 @@ async function extractZip(archivePath: string, dest: string, config: PipelineCon
           return;
         }
 
+        if (isDangerousPath(entryName)) {
+          zipFile.readEntry();
+          return;
+        }
+
+        if (
+          entry.compressedSize > 0 &&
+          entry.uncompressedSize / entry.compressedSize > MAX_COMPRESSION_RATIO
+        ) {
+          zipFile.close();
+          reject(new Error(`Suspicious compression ratio in archive entry: ${entry.fileName}`));
+          return;
+        }
+
         if (/\/$/.test(entryName)) {
           await fsp.mkdir(target, { recursive: true });
           zipFile.readEntry();
@@ -115,7 +136,8 @@ async function extractTar(archivePath: string, dest: string, config: PipelineCon
       return (
         entries <= config.maxArchiveEntries &&
         extractedBytes <= config.maxArchiveBytes &&
-        isInside(dest, target)
+        isInside(dest, target) &&
+        !isDangerousPath(entryPath)
       );
     },
     onentry(entry) {
@@ -130,6 +152,9 @@ async function extractTar(archivePath: string, dest: string, config: PipelineCon
 
 async function extractGzipFile(archivePath: string, dest: string, config: PipelineConfig) {
   const outputName = sanitizeSegment(path.basename(archivePath).replace(/\.gz$/i, ''), 'decompressed-file');
+  if (isDangerousPath(outputName)) {
+    throw new Error('Refusing to extract standalone gzip to a dangerous executable extension');
+  }
   const outputPath = path.join(dest, outputName);
   assertInside(dest, outputPath);
 
@@ -210,7 +235,12 @@ async function extractWith7z(archivePath: string, dest: string, config: Pipeline
     throw new Error('Extracted archive exceeded configured safety limits');
   }
 
-  for (const file of files) assertInside(dest, file);
+  for (const file of files) {
+    assertInside(dest, file);
+    if (isDangerousPath(file)) {
+      throw new Error(`Archive contained dangerous executable entry: ${path.basename(file)}`);
+    }
+  }
   return files;
 }
 
@@ -258,6 +288,7 @@ export async function extractArchive(archive: FileRecord, config: PipelineConfig
       extractedFiles,
     };
   } catch (error) {
+    await fsp.rm(dest, { recursive: true, force: true }).catch(() => undefined);
     return {
       archivePath: archive.absolutePath,
       extractedDir: dest,

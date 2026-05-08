@@ -1,6 +1,6 @@
 # Spotify Clone - Production-Grade Web Application
 
-A fully-featured Spotify clone built with Next.js 14, TypeScript, TailwindCSS, Supabase, and Howler.js. This project implements a pixel-perfect Spotify UI with real-time synchronization, offline caching, and advanced audio visualization.
+A fully-featured Spotify clone built with Next.js 15, TypeScript, TailwindCSS, Supabase, and Howler.js. This project implements a Spotify-style UI with real-time synchronization, offline caching, audio visualization, and an admin music asset pipeline.
 
 ## Features
 
@@ -12,6 +12,8 @@ A fully-featured Spotify clone built with Next.js 14, TypeScript, TailwindCSS, S
 - **Search**: Find songs, albums, artists, playlists across entire library
 - **Liked Songs**: Dedicated playlist for favorite tracks
 - **Recently Played**: Track listening history
+- **Music Asset Admin Portal**: Protected `/admin/music` dashboard for drag-and-drop song uploads, folder uploads, validation, duplicate warnings, cloud upload, and Supabase metadata insertion
+- **Local Music Pipeline**: Recursive scanner/extractor/validator for `C:\Users\SANDY\Music` with JSON, CSV, and TXT reports
 
 ### Technical Features
 - **Real-time Sync**: WebSocket-based playback state sync across tabs/devices
@@ -31,7 +33,7 @@ A fully-featured Spotify clone built with Next.js 14, TypeScript, TailwindCSS, S
 
 | Layer | Technology |
 |-------|-----------|
-| **Frontend** | Next.js 14 (App Router), TypeScript, TailwindCSS v4 |
+| **Frontend** | Next.js 15 (App Router), TypeScript, TailwindCSS |
 | **State Management** | Zustand, React Query |
 | **Audio** | Howler.js, Web Audio API |
 | **Backend** | Supabase (PostgreSQL, Auth, Storage) |
@@ -103,6 +105,24 @@ albums
 ├── thumbnail (TEXT)
 ├── release_year (INTEGER)
 └── created_at (TIMESTAMP)
+
+cloud_uploads
+├── id (UUID, PK)
+├── music_asset_id (UUID → music_assets.id)
+├── storage_file_id (UUID → storage_files.id)
+├── provider (TEXT)
+├── bucket_id (TEXT)
+├── object_key (TEXT)
+├── status (TEXT)
+├── public_url (TEXT)
+├── secure_url (TEXT)
+├── cdn_url (TEXT)
+├── upload_id (TEXT)
+├── error (TEXT)
+├── started_at (TIMESTAMP)
+├── completed_at (TIMESTAMP)
+├── created_at (TIMESTAMP)
+└── updated_at (TIMESTAMP)
 ```
 
 ## Quick Start
@@ -140,6 +160,7 @@ CLOUDINARY_API_SECRET=your_api_secret
 ```bash
 # Navigate to Supabase SQL Editor
 # Run the migration: supabase/migrations/001_initial_schema.sql
+npm run supabase:storage
 ```
 
 4. **Set up Cloudinary**
@@ -177,7 +198,7 @@ railway up
 
 ```
 ┌─────────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Next.js App   │────▶│  Supabase    │────▶│ PostgreSQL   │
+│   Next.js App   │────▶│  Supabase    │────▶│ PostgreSQL  │
 │   (React)       │     │   Auth       │     │   Database   │
 └────────┬────────┘     └──────────────┘     └──────────────┘
          │
@@ -232,7 +253,25 @@ npm run build      # Build for production
 npm run start      # Start production server
 npm run lint       # Run ESLint
 npm run test       # Run Jest tests
+npm run music:analyze # Dry-run scan of C:\Users\SANDY\Music
+npm run music:run -- --apply --extract --upload --db --cloud=supabase --database=supabase
 ```
+
+### Music Admin Portal
+
+Visit `/admin/music`, click `Upload Songs`, and sign in with the configured admin credentials.
+
+Development defaults:
+
+```env
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin@123
+ADMIN_SESSION_SECRET=change_me_to_a_long_random_session_secret
+```
+
+Production should set `MUSIC_PIPELINE_CLOUD_PROVIDER=supabase`, `MUSIC_PIPELINE_DATABASE_PROVIDER=supabase`, `SUPABASE_SERVICE_ROLE_KEY`, and a strong admin password/session secret. Full pipeline documentation is in `docs/music-pipeline.md`.
+
+The production database design lives in `docs/database/ARCHITECTURE.md`, with ERD details in `docs/ER_DIAGRAM.md`, query templates in `supabase/queries/optimized_queries.sql`, and security/performance reports under `docs/database/`.
 
 ### Project Structure
 ```
@@ -330,13 +369,52 @@ npm run test:e2e
 4. Push to branch: `git push origin feature/my-feature`
 5. Submit a pull request
 
-## Known Issues
+## Known Issues & Technical Audit Roadmap
 
-- iOS Safari requires user interaction before audio playback
-- MediaSession API not fully supported in all browsers
-- WebSocket auto-reconnect has 3-second delay (configurable)
+### Task Board
 
-## Roadmap
+| ID | Title | Priority | Status | Est. Credits |
+|----|-------|----------|--------|--------------|
+| TASK-001 | WebSocket authentication bypass - clients can impersonate any user/room | 🔴 Critical | ⏳ Pending | 15 |
+| TASK-002 | WebSocket client ID generation uses Math.random() - predictable IDs (session hijacking) | 🔴 Critical | ⏳ Pending | 10 |
+| TASK-003 | Admin session cookie missing Secure flag in production | 🔴 Critical | ⏳ Pending | 8 |
+| TASK-004 | Missing Content-Security-Policy header in Next.js config | 🟠 High | ⏳ Pending | 12 |
+| TASK-005 | WebSocket message broadcast includes sender's userId without verification | 🟠 High | ⏳ Pending | 10 |
+| TASK-006 | Player store persisted data includes volume/shuffle/repeat but not fully typed | 🟠 High | ⏳ Pending | 8 |
+| TASK-007 | Service worker has no cache eviction strategy - memory leak risk | 🟠 High | ⏳ Pending | 10 |
+| TASK-008 | Missing input validation for song URL in POST /api/songs | 🟠 High | ⏳ Pending | 8 |
+| TASK-009 | Database insert uses 'cloud_uploads' table not defined in schema | 🟠 High | ⏳ Pending | 15 |
+| TASK-010 | WebSocket error handling exposes stack traces to console | 🟡 Medium | ⏳ Pending | 5 |
+| TASK-011 | Missing TypeScript strict mode validation on all files | 🟡 Medium | ⏳ Pending | 12 |
+| TASK-012 | Progress bar click handler lacks boundary checks | 🟡 Medium | ⏳ Pending | 5 |
+| TASK-013 | WebSocket room state synchronization race condition | 🟡 Medium | ⏳ Pending | 10 |
+| TASK-014 | Missing rate limiting on auth endpoints | 🟡 Medium | ⏳ Pending | 8 |
+| TASK-015 | Archive extraction lacks symlink protection | 🟡 Medium | ⏳ Pending | 8 |
+| TASK-016 | Player store RAF loop doesn't handle tab visibility changes | 🟡 Medium | ⏳ Pending | 6 |
+| TASK-017 | Missing CORS configuration for API routes | 🟡 Medium | ⏳ Pending | 6 |
+| TASK-018 | Audio error logging could expose file paths | 🟢 Low | ⏳ Pending | 4 |
+| TASK-019 | Potential memory leak from Howl instance cleanup race condition | 🟢 Low | ⏳ Pending | 6 |
+| TASK-020 | Missing database indexes for playlist_songs filter queries | 🟢 Low | ⏳ Pending | 8 |
+| TASK-021 | WebSocket ping/pong heartbeat missing | 🟢 Low | ⏳ Pending | 5 |
+| TASK-022 | Progress bar visual feedback on drag completion missing | 🟢 Low | ⏳ Pending | 3 |
+| TASK-023 | Duplicate database trigger definitions in schema | 🟢 Low | ⏳ Pending | 4 |
+
+### Legend
+- **🔴 Critical**: Security/core system vulnerabilities that could lead to data breaches or system compromise
+- **🟠 High**: Major bugs or feature gaps affecting core functionality
+- **🟡 Medium**: Enhancements that improve quality and maintainability
+- **🟢 Low**: Polish items and minor optimizations
+
+### Roadmap
+
+- [ ] Mobile app (React Native)
+- [ ] Lyrics display (Musixmatch API)
+- [ ] Podcast support
+- [ ] Social features (follow users, share playlists)
+- [ ] AI recommendations
+- [ ] Social login (Google, Apple, Spotify)
+- [ ] Chromecast support
+- [ ] Desktop app (Electron)
 
 - [ ] Mobile app (React Native)
 - [ ] Lyrics display (Musixmatch API)

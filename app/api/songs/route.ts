@@ -29,15 +29,34 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { title, artist, url, thumbnail, duration, artist_id, album_id } = body;
+   const { title, artist, url, thumbnail, duration, artist_id, album_id } = body;
 
-  // Validate required fields
-  if (!title || !artist || !url || !duration) {
-    return NextResponse.json(
-      { error: 'Missing required fields: title, artist, url, duration' },
-      { status: 400 }
-    );
-  }
+   // Validate required fields
+   if (!title || !artist || !url || !duration) {
+     return NextResponse.json(
+       { error: 'Missing required fields: title, artist, url, duration' },
+       { status: 400 }
+     );
+   }
+
+   // Validate URL format
+   let urlObj;
+   try {
+     urlObj = new URL(url);
+   } catch (err) {
+     return NextResponse.json(
+       { error: 'Invalid URL format' },
+       { status: 400 }
+     );
+   }
+
+   // Optional: Validate URL protocol
+   if (!['http:', 'https:'].includes(urlObj.protocol)) {
+     return NextResponse.json(
+       { error: 'URL must be HTTP or HTTPS' },
+       { status: 400 }
+     );
+   }
 
   const { data, error } = await supabase
     .from('songs')

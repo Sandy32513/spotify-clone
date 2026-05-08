@@ -26,6 +26,8 @@ export interface PipelineConfig {
   uploadParallelism: number;
   maxArchiveEntries: number;
   maxArchiveBytes: number;
+  maxArchiveDepth: number;
+  archiveExtractionRetries: number;
   maxAudioBytes: number;
   cloudProvider: CloudProvider;
   databaseProvider: DatabaseProvider;
@@ -162,4 +164,3 @@ export interface PipelineSummary {
     databaseInserted: number;
   };
 }
-
