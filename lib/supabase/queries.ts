@@ -38,10 +38,11 @@ export async function getSongsByArtist(artistId: string): Promise<{ data: Song[]
 }
 
 export async function searchSongs(query: string): Promise<{ data: Song[] | null; error: any }> {
+  const safeQuery = query.replace(/[^\w\s]/gi, ''); // Remove special characters
   const { data, error } = await supabase
     .from('songs')
     .select('*')
-    .or(`title.ilike.%${query}%,artist.ilike.%${query}%`)
+    .or(`title.ilike.%${safeQuery}%,artist.ilike.%${safeQuery}%`)
     .limit(20);
   return { data, error };
 }
