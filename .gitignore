@@ -52,3 +52,5 @@ AUDIT_REPORT.md
 
 # Logs
 *.log
+
+.vercel
