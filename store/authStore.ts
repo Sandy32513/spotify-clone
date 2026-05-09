@@ -48,21 +48,28 @@ export const useAuthStore = create<AuthStore>()(
       },
 
       refreshSession: async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          const user = session.user as User;
-          set({
-            session: {
+        try {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
+          
+          if (data.session) {
+            const user = data.session.user as User;
+            set({
+              session: {
+                user,
+                access_token: data.session.access_token,
+                refresh_token: data.session.refresh_token,
+                expires_at: data.session.expires_at!,
+              },
               user,
-              access_token: session.access_token,
-              refresh_token: session.refresh_token,
-              expires_at: session.expires_at!,
-            },
-            user,
-            isAuthenticated: true,
-            isLoading: false,
-          });
-        } else {
+              isAuthenticated: true,
+              isLoading: false,
+            });
+          } else {
+            set({ user: null, session: null, isAuthenticated: false, isLoading: false });
+          }
+        } catch (error) {
+          console.error('Session refresh failed:', error);
           set({ user: null, session: null, isAuthenticated: false, isLoading: false });
         }
       },
