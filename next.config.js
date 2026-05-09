@@ -7,6 +7,8 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Required for @supabase/ssr to work correctly on the server
+  serverExternalPackages: ['@supabase/ssr'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**' },
@@ -19,8 +21,9 @@ const nextConfig = {
         source: '/(.*)',
         headers: [
           {
+            // Allow 'unsafe-eval' + 'unsafe-inline' for Next.js HMR & inline scripts in dev
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https: wss:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https: wss:; media-src 'self' blob: https:; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
           },
           {
             key: 'X-Frame-Options',

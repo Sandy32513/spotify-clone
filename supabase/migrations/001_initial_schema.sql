@@ -852,8 +852,8 @@ drop trigger if exists audit_upload_batches_changes on public.upload_batches;
 create trigger audit_upload_batches_changes after insert or update or delete on public.upload_batches for each row execute function app_private.audit_row_change();
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types) values
-  ('songs', 'songs', true, 26214400, array['audio/*', 'application/octet-stream']::text[]),
-  ('music-assets', 'music-assets', true, 26214400, array['audio/*', 'application/octet-stream']::text[]),
+  ('songs', 'songs', false, 26214400, array['audio/*', 'application/octet-stream']::text[]),
+  ('music-assets', 'music-assets', false, 26214400, array['audio/*', 'application/octet-stream']::text[]),
   ('extracted-files', 'extracted-files', false, 26214400, array['audio/*', 'application/octet-stream', 'application/json']::text[]),
   ('temp-uploads', 'temp-uploads', false, 26214400, array['audio/*', 'application/zip', 'application/x-zip-compressed', 'application/x-7z-compressed', 'application/vnd.rar', 'application/gzip', 'application/x-tar', 'application/octet-stream']::text[]),
   ('user-uploads', 'user-uploads', false, 26214400, array['audio/*', 'image/*', 'application/octet-stream']::text[]),
