@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import Sidebar from './Sidebar';
 import Player from './Player';
 import QueuePanel from './QueuePanel';
+import MobileNav from './MobileNav';
 import { useAuthStore } from '@/store/authStore';
 import { useUIStore } from '@/store/uiStore';
 
@@ -39,21 +40,24 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="h-screen flex overflow-hidden bg-[#121212]">
-      {/* Sidebar */}
-      <div className="flex-shrink-0">
+      {/* Sidebar - Desktop Only */}
+      <div className="hidden md:flex flex-shrink-0">
         <Sidebar />
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto pb-24">
+      <main className="flex-1 overflow-y-auto pb-40 md:pb-24">
         <div className="gradient-overlay absolute top-0 left-0 right-0 h-80 pointer-events-none" />
         <div className="relative z-10">{children}</div>
       </main>
 
       {/* Player */}
-      <div className="fixed bottom-0 left-0 right-0 z-50">
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 z-40">
         <Player />
       </div>
+
+      {/* Mobile Navigation */}
+      <MobileNav />
 
       {/* Queue Panel */}
       {showQueue && <QueuePanel />}

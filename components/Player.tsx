@@ -50,20 +50,20 @@ export default function Player() {
   };
 
   return (
-    <div className="glass-player fixed bottom-0 left-0 right-0 z-50 h-24 px-4 flex items-center justify-between">
+    <div className="glass-player h-[72px] md:h-24 px-2 md:px-4 flex items-center justify-between border-t border-[#282828] md:border-none">
       {/* Track Info */}
-      <div className="flex items-center gap-4 w-1/4 min-w-[200px]">
+      <div className="flex items-center gap-2 md:gap-4 w-[60%] md:w-1/4 min-w-0 md:min-w-[200px]">
         {currentSong ? (
           <>
-            <div className="relative group">
+            <div className="relative group shrink-0">
               <Image
                 src={currentSong.thumbnail}
                 alt={currentSong.title}
                 width={56}
                 height={56}
-                className="w-14 h-14 rounded shadow-lg"
+                className="w-10 h-10 md:w-14 md:h-14 rounded shadow-lg"
               />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
+              <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded items-center justify-center">
                 <button
                   onClick={togglePlay}
                   className="w-8 h-8 rounded-full bg-[#1DB954] flex items-center justify-center"
@@ -80,7 +80,7 @@ export default function Player() {
                 </button>
               </div>
             </div>
-            <div className="flex flex-col min-w-0">
+            <div className="flex flex-col min-w-0 overflow-hidden">
               <p className="text-white font-medium truncate text-sm hover:underline cursor-pointer">
                 {currentSong.title}
               </p>
@@ -90,27 +90,27 @@ export default function Player() {
             </div>
           </>
         ) : (
-          <div className="text-[#B3B3B3]">No track selected</div>
+          <div className="text-[#B3B3B3] text-sm">No track</div>
         )}
       </div>
 
       {/* Player Controls */}
-      <div className="flex flex-col items-center gap-2 w-2/4 max-w-[722px]">
-        <div className="flex items-center gap-4">
-          {/* Shuffle */}
+      <div className="flex flex-row md:flex-col items-center justify-end md:justify-center gap-2 w-[40%] md:w-2/4 max-w-[722px]">
+        <div className="flex items-center gap-2 md:gap-4">
+          {/* Shuffle (Hidden on mobile) */}
           <button
             onClick={toggleShuffle}
-            className={`transition-colors ${shuffle ? 'text-[#1DB954]' : 'text-[#B3B3B3] hover:text-white'}`}
+            className={`hidden md:block transition-colors ${shuffle ? 'text-[#1DB954]' : 'text-[#B3B3B3] hover:text-white'}`}
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z" />
             </svg>
           </button>
 
-          {/* Previous */}
+          {/* Previous (Hidden on mobile) */}
           <button
             onClick={playPrevious}
-            className="text-[#B3B3B3] hover:text-white transition-colors"
+            className="hidden md:block text-[#B3B3B3] hover:text-white transition-colors"
           >
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
@@ -121,14 +121,14 @@ export default function Player() {
           <button
             onClick={togglePlay}
             disabled={!currentSong}
-            className="w-10 h-10 rounded-full bg-white flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-50"
+            className="w-10 h-10 md:rounded-full md:bg-white flex items-center justify-center hover:scale-105 transition-transform disabled:opacity-50"
           >
             {isPlaying ? (
-              <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7 md:w-5 md:h-5 md:text-black text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
               </svg>
             ) : (
-              <svg className="w-5 h-5 text-black" fill="currentColor" viewBox="0 0 24 24">
+              <svg className="w-7 h-7 md:w-5 md:h-5 md:text-black text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z" />
               </svg>
             )}
@@ -137,17 +137,17 @@ export default function Player() {
           {/* Next */}
           <button
             onClick={playNext}
-            className="text-[#B3B3B3] hover:text-white transition-colors"
+            className="text-[#B3B3B3] hover:text-white transition-colors ml-2 md:ml-0"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-7 h-7 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
             </svg>
           </button>
 
-          {/* Repeat */}
+          {/* Repeat (Hidden on mobile) */}
           <button
             onClick={cycleRepeat}
-            className={`transition-colors relative ${
+            className={`hidden md:block transition-colors relative ${
               repeat !== 'off' ? 'text-[#1DB954]' : 'text-[#B3B3B3] hover:text-white'
             }`}
           >
@@ -160,8 +160,8 @@ export default function Player() {
           </button>
         </div>
 
-        {/* Progress Bar */}
-        <div className="flex items-center gap-2 w-full">
+        {/* Progress Bar (Hidden on mobile) */}
+        <div className="hidden md:flex items-center gap-2 w-full">
           <span className="text-xs text-[#B3B3B3] w-10 text-right">
             {formatDuration(progress)}
           </span>
@@ -183,8 +183,8 @@ export default function Player() {
         </div>
       </div>
 
-      {/* Volume & Extra Controls */}
-      <div className="flex items-center justify-end gap-3 w-1/4 min-w-[200px]">
+      {/* Volume & Extra Controls (Hidden on mobile) */}
+      <div className="hidden md:flex items-center justify-end gap-3 w-1/4 min-w-[200px]">
         {/* Queue */}
         <button
           onClick={toggleQueue}
@@ -228,6 +228,14 @@ export default function Player() {
             className="w-24 accent-white cursor-pointer"
           />
         </div>
+      </div>
+
+      {/* Mobile Progress Bar (absolute bottom) */}
+      <div className="md:hidden absolute bottom-0 left-0 right-0 h-[2px] bg-[#4d4d4d]">
+        <div
+          className="h-full bg-white transition-all"
+          style={{ width: `${duration ? (progress / duration) * 100 : 0}%` }}
+        />
       </div>
     </div>
   );
