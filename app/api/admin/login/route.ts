@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyAdminCredentials, setAdminSession } from '@/lib/admin-auth';
+import { validateCsrfToken } from '@/lib/csrf';
 import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
@@ -22,6 +23,19 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const username = typeof body.username === 'string' ? body.username : '';
   const password = typeof body.password === 'string' ? body.password : '';
+  
+  // SEC-009: CSRF Validation
+  const csrfToken = request.headers.get('x-csrf-token') || body.csrfToken;
+  const isCsrfValid = await validateCsrfToken(csrfToken);
+  
+  if (!isCsrfValid) {
+    const response = NextResponse.json(
+      { authenticated: false, message: 'Invalid CSRF token. Please refresh the page and try again.' },
+      { status: 403 }
+    );
+    response.headers.set('X-RateLimit-Remaining', remaining.toString());
+    return response;
+  }
 
   if (!verifyAdminCredentials(username, password)) {
     return NextResponse.json(
