@@ -217,7 +217,62 @@ export async function getRecentlyPlayed(
   };
 }
 
-// Albums
+// Liked Songs
+export async function getLikedSongs(
+  userId: string
+): Promise<{ data: Song[] | null; error: any }> {
+  const { data, error } = await supabase
+    .from('likes')
+    .select(`
+      liked_at,
+      song:songs(*)
+    `)
+    .eq('user_id', userId)
+    .order('liked_at', { ascending: false });
+
+  if (error) return { data: null, error };
+
+  return {
+    data: data?.map((item: any) => item.song) || [],
+    error: null,
+  };
+}
+
+export async function checkIsLiked(
+  userId: string,
+  songId: string
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('likes')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('song_id', songId)
+    .single();
+  return !!data;
+}
+
+export async function toggleLikeSong(
+  userId: string,
+  songId: string,
+  isCurrentlyLiked: boolean
+): Promise<{ error: any }> {
+  if (isCurrentlyLiked) {
+    const { error } = await supabase
+      .from('likes')
+      .delete()
+      .eq('user_id', userId)
+      .eq('song_id', songId);
+    return { error };
+  } else {
+    const { error } = await supabase
+      .from('likes')
+      .insert({
+        user_id: userId,
+        song_id: songId,
+      });
+    return { error };
+  }
+}
 export async function getAllAlbums(): Promise<{ data: Album[] | null; error: any }> {
   const { data, error } = await supabase
     .from('albums')

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
 import SongCard from '@/components/SongCard';
-import { getAllSongs } from '@/lib/supabase/queries';
+import { getLikedSongs } from '@/lib/supabase/queries';
 import { useAuthStore } from '@/store/authStore';
 import { usePlayerStore } from '@/store/playerStore';
 import type { Song } from '@/types';
@@ -21,9 +21,12 @@ export default function LikedSongsPage() {
 
   useEffect(() => {
     const loadLikedSongs = async () => {
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
       setLoading(true);
-      // Get all songs (in real app, get only liked songs)
-      const { data } = await getAllSongs();
+      const { data } = await getLikedSongs(userId);
       if (data) {
         setLikedSongs(data);
       }
